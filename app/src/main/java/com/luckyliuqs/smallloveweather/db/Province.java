@@ -1,8 +1,8 @@
 package com.luckyliuqs.smallloveweather.db;
 
-import org.litepal.LitePal;
+import org.litepal.crud.DataSupport;
 
-public class Province extends LitePal {
+public class Province extends DataSupport {
     //省ID
     private int id;
     //省名称

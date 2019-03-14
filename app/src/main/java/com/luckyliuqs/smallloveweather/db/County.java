@@ -1,8 +1,8 @@
 package com.luckyliuqs.smallloveweather.db;
 
-import org.litepal.LitePal;
+import org.litepal.crud.DataSupport;
 
-public class County extends LitePal{
+public class County extends DataSupport {
     //县id
     private int id;
     //县名称

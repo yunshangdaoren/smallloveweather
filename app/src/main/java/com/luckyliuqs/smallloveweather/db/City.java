@@ -1,8 +1,8 @@
 package com.luckyliuqs.smallloveweather.db;
 
-import org.litepal.LitePal;
+import org.litepal.crud.DataSupport;
 
-public class City extends LitePal{
+public class City extends DataSupport {
     //市id
     private int id;
     //市名称
