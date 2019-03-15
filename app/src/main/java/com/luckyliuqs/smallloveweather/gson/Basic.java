@@ -7,5 +7,5 @@ import com.google.gson.annotations.SerializedName;
  */
 public class Basic {
     @SerializedName("location")
-    public String cityName;     //城市名称
+    public String countyName;     //城市名称
 }
