@@ -8,8 +8,10 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary">
+        android:layout_height="80dp"
+        android:background="?attr/colorPrimary"
+        android:paddingTop="30dp">
+        <!-- 描述当前所在的省市县 -->
         <TextView
             android:id="@+id/title_text"
             android:layout_width="wrap_content"
@@ -17,7 +19,7 @@
             android:layout_centerInParent="true"
             android:textColor="#1c1b1b"
             android:textSize="20sp"/>
-
+        <!-- 返回上一级按钮 -->
         <Button
             android:id="@+id/back_button"
             android:layout_width="25dp"
@@ -27,7 +29,7 @@
             android:layout_centerVertical="true"
             android:background="@drawable/return_icon" />
     </RelativeLayout>
-
+    <!-- 展示省市县数据信息列表 -->
     <ListView
         android:id="@+id/list_view"
         android:layout_width="match_parent"
