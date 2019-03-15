@@ -7,8 +7,8 @@
     <!-- 首页按钮 -->
     <Button
         android:id="@+id/nav_button"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
         android:layout_marginLeft="10dp"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"

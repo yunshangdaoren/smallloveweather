@@ -47,7 +47,7 @@ public class WeatherActivity extends AppCompatActivity {
     private ImageView bingPicImg;
     public SwipeRefreshLayout swipeRefreshLayout;
     private String refreshCountyName;
-    private DrawerLayout drawerLayout;
+    public static DrawerLayout drawerLayout;
     //按钮：用于显示滑动菜单
     private Button navButton;
 

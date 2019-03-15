@@ -17,6 +17,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.luckyliuqs.smallloveweather.MainActivity;
 import com.luckyliuqs.smallloveweather.R;
 import com.luckyliuqs.smallloveweather.WeatherActivity;
 import com.luckyliuqs.smallloveweather.db.City;
@@ -92,10 +93,24 @@ public class ChooseAreaFragment extends Fragment {
                 }else if(currenLevel == LEVEL_COUNTY){
                     //获取到城市名称
                     String countyName = countyList.get(position).getCountyName();
-                    Intent intent = new Intent(getActivity(), WeatherActivity.class);
-                    intent.putExtra("countyName",countyName);
-                    startActivity(intent);
-                    getActivity().finish();
+                    //判断Fragment是在MainActivity中还是在WeatherActivity中
+                    if(getActivity() instanceof MainActivity){
+                        //Fragment在MainActivity中
+                        Intent intent = new Intent(getActivity(), WeatherActivity.class);
+                        intent.putExtra("countyName",countyName);
+                        startActivity(intent);
+                        getActivity().finish();
+                    }else if(getActivity() instanceof WeatherActivity){
+                        //Fragment在WeatherActivity中
+                        WeatherActivity weatherActivity =(WeatherActivity) getActivity();
+                        //关闭掉滑动菜单
+                        weatherActivity.drawerLayout.closeDrawers();
+                        //显示下拉刷新进度条
+                        weatherActivity.swipeRefreshLayout.setRefreshing(true);
+                        //重新请求指定的城市天气
+                        weatherActivity.requestWeather(countyName);
+                    }
+
                 }
             }
         });
