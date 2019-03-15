@@ -1,14 +1,18 @@
 package com.luckyliuqs.smallloveweather.util;
 
 import android.text.TextUtils;
+import android.util.Log;
 
+import com.google.gson.Gson;
 import com.luckyliuqs.smallloveweather.db.City;
 import com.luckyliuqs.smallloveweather.db.County;
 import com.luckyliuqs.smallloveweather.db.Province;
+import com.luckyliuqs.smallloveweather.gson.Weather;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 
 /**
  * 用于解析和处理数据
@@ -35,11 +39,11 @@ public class Utility {
         }
         return false;
     }
-
     /**
      * 解析和处理服务器返回的市级数据
      */
     public static boolean handleCityResponse(String response,int provinceId){
+        Log.i("Utility", "进入解析和处理服务器返回的市级数据方法");
         if(!TextUtils.isEmpty(response)){
             try{
                 JSONArray allCities = new JSONArray(response);
@@ -50,6 +54,7 @@ public class Utility {
                     city.setCityCode(cityObject.getInt("id"));
                     city.setProvinceId(provinceId);
                     city.save();
+                    Log.i("Utility", "保存市级数据");
                 }
                 return true;
             }catch (JSONException e){
@@ -58,7 +63,6 @@ public class Utility {
         }
         return false;
     }
-
     /**
      * 解析和处理服务器返回的县级数据
      */
@@ -80,6 +84,21 @@ public class Utility {
             }
         }
         return false;
+    }
+
+    /**
+     * 将返回的JSON数据解析成Weather实体类
+     */
+    public static Weather handleWeatherResponse(String response){
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            JSONArray jsonArray = jsonObject.getJSONArray("HeWeather6");
+            String weatherContent = jsonArray.getJSONObject(0).toString();
+            return new Gson().fromJson(weatherContent,Weather.class);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

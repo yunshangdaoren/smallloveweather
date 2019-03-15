@@ -1,6 +1,7 @@
 package com.luckyliuqs.smallloveweather.fragment;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.luckyliuqs.smallloveweather.R;
+import com.luckyliuqs.smallloveweather.WeatherActivity;
 import com.luckyliuqs.smallloveweather.db.City;
 import com.luckyliuqs.smallloveweather.db.County;
 import com.luckyliuqs.smallloveweather.db.Province;
@@ -80,11 +82,20 @@ public class ChooseAreaFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (currenLevel == LEVEL_PROVINCE) {
+                    Log.i("ChooseAreaFragment", "点击省："+provinceList.get(position).getProvinceName());
                     selectedProvince = provinceList.get(position);
                     queryCities();
                 }else if(currenLevel == LEVEL_CITY){
+                    Log.i("ChooseAreaFragment", "点击市："+cityList.get(position).getCityName());
                     selectedCity = cityList.get(position);
                     queryCounties();
+                }else if(currenLevel == LEVEL_COUNTY){
+                    //获取到城市名称
+                    String countyName = countyList.get(position).getCountyName();
+                    Intent intent = new Intent(getActivity(), WeatherActivity.class);
+                    intent.putExtra("countyName",countyName);
+                    startActivity(intent);
+                    getActivity().finish();
                 }
             }
         });
@@ -125,6 +136,7 @@ public class ChooseAreaFragment extends Fragment {
      * 查询选中省内的所有市，优先从数据库查询，如果没有查询到就去服务器上查询
      */
     private void queryCities() {
+        Log.i("ChooseAreaFragment", "进入查询这个省的所有市方法");
         titleText.setText(selectedProvince.getProvinceName());
         backButton.setVisibility(View.VISIBLE);
         cityList = DataSupport.where("provinceid = ?",String.valueOf(selectedProvince.getId())).find(City.class);
@@ -140,6 +152,7 @@ public class ChooseAreaFragment extends Fragment {
             Log.i("Activity", "转变后currenLevel:"+currenLevel);
         } else {
             int provinceCode = selectedProvince.getProvinceCode();
+            Log.i("ChooseAreaFragment", "本地没有查询到："+selectedProvince.getProvinceName()+"省的所有市，准备进行服务器获取！");
             String address = "http://guolin.tech/api/china/" + provinceCode;
             queryFromServer(address, "city");
         }
@@ -162,7 +175,8 @@ public class ChooseAreaFragment extends Fragment {
         } else {
             int provinceCode = selectedProvince.getProvinceCode();
             int cityCode = selectedCity.getCityCode();
-            String address = "http://guolin.tech/api/china/"+provinceCode+"/"+cityCode;
+            Log.i("ChooseAreaFragment", "本地没有查询到："+selectedCity.getCityName()+" 市的所有县，准备进行服务器获取！");
+            String address = "http://guolin.tech/api/china/" + provinceCode+"/"+cityCode;
             queryFromServer(address, "county");
         }
     }
@@ -180,20 +194,25 @@ public class ChooseAreaFragment extends Fragment {
                     //储存省数据
                     result = Utility.handleProvinceResponse(responseText);
                 }else if("city".equals(type)){
+                    Log.i("ChooseAreaFragment", "进入服务器查询省内所有市名称方法！");
                     //储存市数据
                     result = Utility.handleCityResponse(responseText,selectedProvince.getId());
                 }else if("county".equals(type)){
+                    Log.i("ChooseAreaFragment", "进入服务器查询市内所有市名称方法！");
                     //储存县数据
                     result = Utility.handleCountyResponse(responseText,selectedCity.getId());
                 }
+                //成功从服务器上获取并保存了数据，调用方法展示数据
                 if(result){
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            //关闭等待进度条对话框
                             closeProgressDialog();
                             if("province".equals(type)){
                                 queryProvinces();
                             }else if("city".equals(type)){
+                                Log.i("ChooseAreaFragment", "成功从服务器获取到市名称并储存到本地");
                                 queryCities();
                             }else if("county".equals(type)){
                                 queryCounties();
@@ -208,6 +227,7 @@ public class ChooseAreaFragment extends Fragment {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        //关闭等待进度条对话框
                         closeProgressDialog();
                         Toast.makeText(getContext(),"加载失败！",Toast.LENGTH_SHORT).show();
                     }
@@ -222,6 +242,7 @@ public class ChooseAreaFragment extends Fragment {
     private void showProgressDialog(){
         if(progressDialog == null){
             progressDialog = new ProgressDialog(getActivity());
+            progressDialog.setTitle("请等待");
             progressDialog.setMessage("正在加载省市县数据...");
             progressDialog.setCanceledOnTouchOutside(false);
         }
