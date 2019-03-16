@@ -4,7 +4,9 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="15dp">
+    android:layout_margin="10dp"
+    android:paddingBottom="10dp"
+    android:background="#451c1c1c">
 
     <!-- 显示当前气温 -->
     <TextView
@@ -13,13 +15,15 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:textColor="#FFFFFF"
-        android:textSize="60sp"/>
-    <!-- 显示当前天气状况 -->
+        android:textSize="60sp"
+        android:layout_marginRight="10dp"/>
+    <!-- 显示更新时间 -->
     <TextView
-        android:id="@+id/weather_info_text"
+        android:id="@+id/title_update_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:textColor="#FFFFFF"
-        android:textSize="17sp"/>
+        android:textSize="13sp"
+        android:layout_marginRight="10dp"/>
 </LinearLayout>

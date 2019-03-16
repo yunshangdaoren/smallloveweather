@@ -10,14 +10,15 @@
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:background="?attr/colorPrimary"
-        android:paddingTop="30dp">
+        android:paddingTop="30dp"
+        android:backgroundTint="#1b1b1b">
         <!-- 描述当前所在的省市县 -->
         <TextView
             android:id="@+id/title_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:textColor="#1c1b1b"
+            android:textColor="#ff0000"
             android:textSize="20sp"/>
         <!-- 返回上一级按钮 -->
         <Button
