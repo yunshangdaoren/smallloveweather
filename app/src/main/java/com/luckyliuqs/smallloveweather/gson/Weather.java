@@ -19,9 +19,9 @@ public class Weather {
     //当前天气信息
     @SerializedName("now")
     public Now now;
-    //些天气相关的生活建议
-    //@SerializedName("lifestyle")
-   // public Suggestion suggestion;
+    //一些天气相关的生活建议
+    @SerializedName("lifestyle")
+    public List<Suggestion> suggestionList;
     //来几天天气情况
     @SerializedName("daily_forecast")
     public List<Forecast> forecastList;

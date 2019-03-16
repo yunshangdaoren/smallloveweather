@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.luckyliuqs.smallloveweather.db.City;
 import com.luckyliuqs.smallloveweather.db.County;
 import com.luckyliuqs.smallloveweather.db.Province;
+import com.luckyliuqs.smallloveweather.gson.BackgroundImage;
 import com.luckyliuqs.smallloveweather.gson.Weather;
 
 import org.json.JSONArray;
@@ -87,7 +88,7 @@ public class Utility {
     }
 
     /**
-     * 将返回的JSON数据解析成Weather实体类
+     * 将返回的天气JSON数据解析成Weather实体类
      */
     public static Weather handleWeatherResponse(String response){
         try {
@@ -100,5 +101,17 @@ public class Utility {
         }
         return null;
     }
-
+    /**
+     * 将返回的图片JSON数据解析成
+     */
+    public static BackgroundImage handleBackgroundIamgeResponse(String response){
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            String weatherContent = jsonObject.toString();
+            return new Gson().fromJson(weatherContent,BackgroundImage.class);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

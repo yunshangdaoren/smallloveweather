@@ -10,7 +10,12 @@ public class Now {
     @SerializedName("tmp")
     public String temperature;
     //天气情况
-    @SerializedName("wind_dir")
+    @SerializedName("cond_txt")
     public String weatherInfo;
-
+    //相对湿度
+    @SerializedName("hum")
+    public String humidity;
+    //能见度
+    @SerializedName("vis")
+    public String visibility;
 }

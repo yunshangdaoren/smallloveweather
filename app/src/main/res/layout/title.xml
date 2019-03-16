@@ -2,17 +2,18 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="?attr/actionBarSize">
+    android:layout_height="?attr/actionBarSize"
+    android:background="#451c1c1c">
 
     <!-- 首页按钮 -->
     <Button
         android:id="@+id/nav_button"
-        android:layout_width="26dp"
-        android:layout_height="26dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_marginLeft="10dp"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:background="@drawable/home_icon"/>
+        android:background="@drawable/home_icon_white"/>
 
     <!-- 显示城市名 -->
     <TextView
@@ -20,7 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:textColor="#FFFFFF"
+        android:textColor="#ffffff"
         android:textSize="20sp"/>
     <!-- 显示更新时间 -->
     <TextView
@@ -30,6 +31,6 @@
         android:layout_marginRight="10dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:textColor="#FFFFFF"
+        android:textColor="#ffffff"
         android:textSize="20sp"/>
 </RelativeLayout>

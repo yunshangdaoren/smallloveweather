@@ -21,7 +21,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.luckyliuqs.smallloveweather.gson.BackgroundImage;
 import com.luckyliuqs.smallloveweather.gson.Forecast;
+import com.luckyliuqs.smallloveweather.gson.Suggestion;
 import com.luckyliuqs.smallloveweather.gson.Weather;
 import com.luckyliuqs.smallloveweather.util.HttpUtil;
 import com.luckyliuqs.smallloveweather.util.Utility;
@@ -39,11 +41,11 @@ public class WeatherActivity extends AppCompatActivity {
     private TextView degreeText;
     private TextView weatherInfoText;
     private LinearLayout forecastLayout;
-    private TextView aqiText;
-    private TextView pm25Text;
-    private TextView comfortText;
-    private TextView travelText;
-    private TextView sportText;
+    private LinearLayout suggestionLayout;
+    //相对湿度
+    private TextView humidityText;
+    //能见度
+    private TextView visibilityText;
     private ImageView bingPicImg;
     public SwipeRefreshLayout swipeRefreshLayout;
     private String refreshCountyName;
@@ -95,13 +97,7 @@ public class WeatherActivity extends AppCompatActivity {
                 drawerLayout.openDrawer(GravityCompat.START);
             }
         });
-        String bingPic = prefs.getString("bing_pic",null);
-        if(bingPicImg != null){
-            Glide.with(this).load(bingPic).into(bingPicImg);
-        }else{
-            loadBingPic();
-        }
-
+        loadBingPic();
     }
     /**
      * 初始化控件
@@ -113,11 +109,9 @@ public class WeatherActivity extends AppCompatActivity {
         degreeText = findViewById(R.id.degree_text);
         weatherInfoText = findViewById(R.id.weather_info_text);
         forecastLayout = findViewById(R.id.forecast_layout);
-        aqiText = findViewById(R.id.aqi_text);
-        pm25Text = findViewById(R.id.pm25_text);
-        comfortText = findViewById(R.id.comfort_text);
-        travelText = findViewById(R.id.car_wash_text);
-        sportText = findViewById(R.id.sport_text);
+        suggestionLayout = findViewById(R.id.suggestion_layout);
+        humidityText = findViewById(R.id.humidity_text);
+        visibilityText = findViewById(R.id.visibility_text);
         bingPicImg = findViewById(R.id.bing_pic_img);
         swipeRefreshLayout = findViewById(R.id.swipe_refresh);
         drawerLayout = findViewById(R.id.drawer_layout);
@@ -128,7 +122,6 @@ public class WeatherActivity extends AppCompatActivity {
      */
     public void requestWeather(final String countyName){
         final String weatherUrl = "https://free-api.heweather.net/s6/weather?location=" + countyName + "&key=dbc6bdff6cf9425a9fd2e65c5da6a918";
-        Log.i("WeatherActivity", "requestWeather（）方法：开始请求数据 ");
         HttpUtil.sendOkHttpRequest(weatherUrl, new Callback() {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
@@ -178,11 +171,17 @@ public class WeatherActivity extends AppCompatActivity {
         String updateTime = weather.update.updateTime.split(" ")[1];
         String degree = weather.now.temperature + "℃";
         String weatherInfo = weather.now.weatherInfo;
+        String humidityInfo = weather.now.humidity;
+        String visibilityInfo = weather.now.visibility;
         titleCity.setText(countyName);
         titleUpdateTime.setText(updateTime);
         degreeText.setText(degree);
         weatherInfoText.setText(weatherInfo);
+        humidityText.setText(humidityInfo);
+        visibilityText.setText(visibilityInfo);
+        //移除现有的天气预测信息列表
         forecastLayout.removeAllViews();
+        //加载未来几天的天气预报信息
         for(int i = 0;i<weather.forecastList.size();i++){
             Forecast forecast = weather.forecastList.get(i);
             View view = LayoutInflater.from(this).inflate(R.layout.forecast_item,forecastLayout,false);
@@ -196,34 +195,71 @@ public class WeatherActivity extends AppCompatActivity {
             minText.setText(forecast.temperature_min + "℃");
             forecastLayout.addView(view);
         }
-       // if(weather.aqi != null){
-           // aqiText.setText(weather.aqi.city.aqi);
-           // pm25Text.setText(weather.aqi.city.pm25);
-       // }
-       // String comfort = "舒适度："+weather.suggestion.comfort;
-       // String sport = "运动指数："+weather.suggestion.sport;
-        //String traveling = "旅游指数："+weather.suggestion.traveling;
-        //comfortText.setText(comfort);
-        //sportText.setText(sport);
-        //travelText.setText(traveling);
+        //移除现有的建议信息列表
+        suggestionLayout.removeAllViews();
+        //加载生活建议信息
+        for(int j = 0;j<weather.suggestionList.size();j++){
+            if(weather.suggestionList.get(j).type.equals("comf")){
+                View view = LayoutInflater.from(this).inflate(R.layout.suggestion_item,suggestionLayout,false);
+                TextView suggestionType = view.findViewById(R.id.suggestion_type);
+                TextView suggestionText = view.findViewById(R.id.suggestion_text);
+                Suggestion suggestion = weather.suggestionList.get(j);
+                suggestionType.setText("舒适度指数："+suggestion.brf);
+                suggestionText.setText("\u3000\u3000"+suggestion.txt);
+                suggestionLayout.addView(view);
+            }else if(weather.suggestionList.get(j).type.equals("sport")){
+                View view = LayoutInflater.from(this).inflate(R.layout.suggestion_item,suggestionLayout,false);
+                TextView suggestionType = view.findViewById(R.id.suggestion_type);
+                TextView suggestionText = view.findViewById(R.id.suggestion_text);
+                Suggestion suggestion = weather.suggestionList.get(j);
+                suggestionType.setText("运动指数："+suggestion.brf);
+                suggestionText.setText("\u3000\u3000"+suggestion.txt);
+                suggestionLayout.addView(view);
+            }else if(weather.suggestionList.get(j).type.equals("trav")){
+                View view = LayoutInflater.from(this).inflate(R.layout.suggestion_item,suggestionLayout,false);
+                TextView suggestionType = view.findViewById(R.id.suggestion_type);
+                TextView suggestionText = view.findViewById(R.id.suggestion_text);
+                Suggestion suggestion = weather.suggestionList.get(j);
+                suggestionType.setText("旅游指数："+suggestion.brf);
+                suggestionText.setText("\u3000\u3000"+suggestion.txt);
+                suggestionLayout.addView(view);
+            }else if(weather.suggestionList.get(j).type.equals("ptfc")){
+                View view = LayoutInflater.from(this).inflate(R.layout.suggestion_item,suggestionLayout,false);
+                TextView suggestionType = view.findViewById(R.id.suggestion_type);
+                TextView suggestionText = view.findViewById(R.id.suggestion_text);
+                Suggestion suggestion = weather.suggestionList.get(j);
+                suggestionType.setText("交通指数："+suggestion.brf);
+                suggestionText.setText("\u3000\u3000"+suggestion.txt);
+                suggestionLayout.addView(view);
+            }
+        }
         weatherLayout.setVisibility(View.VISIBLE);
     }
     /**
      * 加载必应每日一图图片
      */
     public void loadBingPic(){
-        String requestBingPic = "http://guolin.tech/api/bing_pic";
+        //获取图片的地址
+        String requestBingPic = "https://api.ixiaowai.cn/api/api.php?return=json";
         HttpUtil.sendOkHttpRequest(requestBingPic, new Callback() {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                final String bingPic = response.body().string();
-                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(WeatherActivity.this).edit();
-                editor.putString("bing_pic",bingPic);
-                editor.apply();
+                final String responseText = response.body().string();
+                final BackgroundImage image = Utility.handleBackgroundIamgeResponse(responseText);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Glide.with(WeatherActivity.this).load(bingPic).into(bingPicImg);
+                        if(image != null && image.status.equals("200")){
+                            SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(WeatherActivity.this).edit();
+                            editor.putString("backgoundImage",responseText);
+                            editor.apply();
+                            String backgroundImageUrl = image.imageUrl;
+                            //加载图片
+                            Glide.with(WeatherActivity.this).load(backgroundImageUrl).into(bingPicImg);
+                            Log.i("WeatherActivity", "背景图片地址为："+backgroundImageUrl+"=================");
+                        }else{
+                            Toast.makeText(WeatherActivity.this,"获取背景图片失败！",Toast.LENGTH_SHORT).show();;
+                        }
                     }
                 });
             }
