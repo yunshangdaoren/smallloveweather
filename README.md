@@ -3,7 +3,7 @@
 
 其中用到的数据接口如下：
 
-背景图片接口：https://api.ixiaowai.cn/
+背景图片网址：https://api.ixiaowai.cn/
 
 背景图片API接口：https://api.ixiaowai.cn/api/api.php?return=json
 
