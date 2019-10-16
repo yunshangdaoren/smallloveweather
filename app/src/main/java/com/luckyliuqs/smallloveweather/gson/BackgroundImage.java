@@ -11,4 +11,8 @@ public class BackgroundImage {
     public String status;
     @SerializedName("imgurl")
     public String imageUrl;
+    @SerializedName("width")
+    public String width;
+    @SerializedName("height")
+    public String height;
 }

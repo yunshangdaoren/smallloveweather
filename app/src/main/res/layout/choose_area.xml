@@ -8,9 +8,9 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="130dp"
         android:background="?attr/colorPrimary"
-        android:paddingTop="30dp"
+        android:paddingTop="10dp"
         android:backgroundTint="#1b1b1b">
         <!-- 描述当前所在的省市县 -->
         <TextView

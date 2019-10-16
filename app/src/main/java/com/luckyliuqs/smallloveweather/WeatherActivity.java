@@ -89,6 +89,8 @@ public class WeatherActivity extends AppCompatActivity {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                //加载必应每日一图图片
+                loadBingPic();
                 requestWeather(refreshCountyName);
             }
         });
@@ -161,8 +163,8 @@ public class WeatherActivity extends AppCompatActivity {
                 });
             }
         });
-        //加载必应每日一图图片
-        loadBingPic();
+//        //加载必应每日一图图片
+//        loadBingPic();
     }
     /**
      * 处理并展示Weather实体类中的数据
@@ -245,16 +247,21 @@ public class WeatherActivity extends AppCompatActivity {
      * 加载图片
      */
     public void loadBingPic(){
-        String requestBingPic = "https://api.ixiaowai.cn/api/api.php?return=json";
+        String requestBingPic = "http://api.ixiaowai.cn/api/api.php?return=json";
         HttpUtil.sendOkHttpRequest(requestBingPic, new Callback() {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 final String responseText = response.body().string();
                 final BackgroundImage image = Utility.handleBackgroundIamgeResponse(responseText);
+                Log.i("ImageInfo", "image:" + image);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        if (image == null){
+                            Log.i("ImageInfo", "image is null");
+                        }
                         if(image != null && image.status.equals("200")){
+                            Log.i("ImageInfo", "图片加载成功");
                             SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(WeatherActivity.this).edit();
                             editor.putString("backgoundImage",responseText);
                             editor.apply();
@@ -262,6 +269,7 @@ public class WeatherActivity extends AppCompatActivity {
                             Glide.with(WeatherActivity.this).load(backgroundImageUrl).into(backgroundImage);
                             Log.i("WeatherActivity", "背景图片地址为："+backgroundImageUrl+"=================");
                         }else{
+                            Log.i("ImageInfo", "图片加载失败.....");
                             Toast.makeText(WeatherActivity.this,"获取背景图片失败！",Toast.LENGTH_SHORT).show();;
                         }
                     }
@@ -269,7 +277,9 @@ public class WeatherActivity extends AppCompatActivity {
             }
             @Override
             public void onFailure(Call call, IOException e) {
+                Log.i("ImageInfo", "图片onFailure========================================================" );
                 e.printStackTrace();
+                Log.i("ImageInfo", "图片onFailure========================================================" );
             }
         });
     }

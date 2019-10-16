@@ -117,6 +117,7 @@ public class ChooseAreaFragment extends Fragment {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.i("ChooseAreaFragment", "============点击了返回按钮"+v.toString());
                 if(currenLevel == LEVEL_COUNTY){
                     queryCities();
                 }else if(currenLevel == LEVEL_CITY){
