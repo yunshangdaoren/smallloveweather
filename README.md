@@ -9,4 +9,6 @@
 
 城市数据接口：http://guolin.tech/api/china
 
-天气数据接口使用和风天气（https://dev.heweather.com）：https://free-api.heweather.net/s6/weather?parameters & key
+天气数据接口使用和风天气：
+  官网：https://dev.heweather.com
+  接口：https://free-api.heweather.net/s6/weather?parameters & key
